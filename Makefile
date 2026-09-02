@@ -1,8 +1,6 @@
-COMPOSE = docker compose --env-file srcs/.env -f srcs/docker-compose.yaml
+COMPOSE := docker compose --env-file srcs/.env -f srcs/docker-compose.yaml
 
-include srcs/.env
-
-SECRET_FILES = \
+SECRET_FILES := \
 	secrets/db_password.txt \
 	secrets/db_root_password.txt \
 	secrets/wp_admin_password.txt \
@@ -13,10 +11,9 @@ SECRET_FILES = \
 all: up
 
 prepare:
-	@mkdir -p "$(DATA_PATH)/mariadb" "$(DATA_PATH)/wordpress"
 	@for file in $(SECRET_FILES); do \
-		if [ ! -f "$$file" ]; then \
-			echo "Missing secret: $$file"; \
+		if [ ! -s "$$file" ]; then \
+			echo "Missing or empty secret: $$file"; \
 			exit 1; \
 		fi; \
 	done
@@ -43,4 +40,3 @@ ps:
 	$(COMPOSE) ps
 
 re: down up
-

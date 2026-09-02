@@ -1,0 +1,8 @@
+#local secrets
+secrets/*.txt
+
+#vim/vscode noise
+.vscode/*
+*.swp
+*~
+
