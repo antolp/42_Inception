@@ -1,0 +1,29 @@
+services:
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+    image: mariadb:inception
+
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    networks:
+      - inception
+    
+    restart: on-failure
+
+    secrets:
+      - db_password
+      - db_root_password
+
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+
+
+secrets:
+  - db_password
+  - db_root_password
