@@ -1,0 +1,41 @@
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+error_log /var/log/nginx/error.log;
+
+events {
+	worker_connections 1024;
+}
+
+http {
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	sendfile on;
+
+	server {
+		listen 443 ssl;
+		server_name __DOMAIN_NAME__;
+
+		ssl_certificate /etc/nginx/ssl/nginx.crt;
+		ssl_certificate_key /etc/nginx/ssl/nginx.key;
+		ssl_protocols TLSv1.2 TLSv1.3;
+
+		root /var/www/html;
+		index index.php index.html;
+
+		location / {
+			try_files $uri $uri/ /index.php?$args;
+		}
+
+		location ~ \.php$ {
+			try_files $uri =404;
+			include fastcgi_params;
+			fastcgi_pass wordpress:9000;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_param HTTPS on;
+		}
+	}
+}
+
