@@ -38,11 +38,14 @@ fi
 if [ ! -f "$CONFIG_FLAG" ]; then
 	echo "Configuring Inception database..."
 
-	mariadbd \
-		--bootstrap \
-		--user=mysql \
-		--datadir="$DATADIR" \
-		--skip-networking <<EOF_SQL
+mariadbd \
+    --bootstrap \
+    --user=mysql \
+    --datadir="$DATADIR" \
+    --skip-networking <<EOF
+
+FLUSH PRIVILEGES;
+
 ALTER USER 'root'@'localhost'
 IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 
@@ -59,7 +62,7 @@ ON \`${MYSQL_DATABASE}\`.*
 TO '${MYSQL_USER}'@'%';
 
 FLUSH PRIVILEGES;
-EOF_SQL
+EOF
 
 	touch "$CONFIG_FLAG"
 	chown mysql:mysql "$CONFIG_FLAG"
