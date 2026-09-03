@@ -6,3 +6,5 @@ secrets/*.txt
 *.swp
 *~
 
+#notes
+*.txt
